@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<link rel="icon" href="data:,">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K-Watch — 시민 신고, 접수부터 진행 상황 공개까지</title>
+<meta name="description" content="목격하거나 겪은, 국가 또는 공동체의 대응이 필요한 사건을 관련 기관에 신고하고 대응을 개시시키는 혼디넷의 AI입니다. 범죄뿐 아니라 생활 속 부당·불법·편법·오염·파손까지 다룹니다.">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root {
+  --gov-header: #001233;
+  --gov-nav:    #5C1E1E;
+  --primary:    #B03A2E;
+  --primary-dk: #8F2E24;
+  --primary-lt: #D66A5E;
+  --primary-bg: #FBEBE9;
+  --primary-bd: #F0BDB6;
+  --accent:     #B03A2E;
+  --accent-dk:  #8F2E24;
+  --accent-bg:  #FBEBE9;
+  --surface:    #FFFFFF;
+  --bg:         #F5F6FA;
+  --border:     #DFE2ED;
+  --text:       #1A202C;
+  --sub:        #4A5568;
+  --hint:       #718096;
+  --green:      #1B6B3A; --green-bg: #E6F4EC;
+  --orange:     #C05621; --orange-bg: #FEF3E2;
+  --red:        #C01C28; --red-bg: #FEE2E2;
+  --font: 'Pretendard', -apple-system, 'Apple SD Gothic Neo', sans-serif;
+  --shadow-1: 0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.05);
+  --shadow-2: 0 6px 18px rgba(0,0,0,.10);
+  --r: 6px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font); font-size: 14px; color: var(--text); background: var(--bg); -webkit-font-smoothing: antialiased; line-height: 1.6; }
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+
+.gov-bar { background: var(--gov-header); color: rgba(255,255,255,.72); font-size: 11px; padding: 6px 0; text-align: center; letter-spacing: .3px; font-weight: 500; }
+.gov-bar a { color: rgba(255,255,255,.90); font-weight: 700; }
+.gov-bar a:hover { text-decoration: underline; }
+
+.topnav { background: var(--gov-nav); position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 10px rgba(0,0,0,.22); }
+.topnav-inner { max-width: 1160px; margin: 0 auto; padding: 0 24px; display: flex; align-items: stretch; height: 54px; }
+.topnav-logo { display: flex; align-items: center; gap: 9px; font-size: 17px; font-weight: 800; color: #fff; letter-spacing: -.4px; padding-right: 18px; border-right: 1px solid rgba(255,255,255,.15); flex-shrink: 0; margin-right: 6px; }
+.topnav-logo-icon { width: 30px; height: 30px; background: var(--primary-lt); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; }
+.topnav-links { display: flex; flex: 1; }
+.topnav-links a { display: flex; align-items: center; padding: 0 15px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,.72); transition: background .15s, color .15s; border-bottom: 3px solid transparent; white-space: nowrap; }
+.topnav-links a:hover { background: rgba(255,255,255,.08); color: #fff; }
+.topnav-right { display: flex; align-items: center; gap: 10px; margin-left: auto; padding-left: 16px; flex-shrink: 0; }
+.topnav-status { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: rgba(255,255,255,.55); }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: #f0b429; }
+.topnav-cta { background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.18); color: #fff; padding: 7px 14px; border-radius: var(--r); font-size: 12px; font-weight: 700; }
+.topnav-cta:hover { background: rgba(255,255,255,.18); }
+
+.hero { background: linear-gradient(150deg, #330F0F 0%, #5C1E1E 55%, #B03A2E 100%); color: #fff; padding: 60px 0 52px; border-bottom: 3px solid var(--primary-lt); }
+.hero-inner { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+.hero-tag { display: inline-flex; align-items: center; gap: 7px; background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.16); border-radius: 20px; padding: 4px 14px; font-size: 11px; font-weight: 700; color: rgba(255,255,255,.80); letter-spacing: .3px; margin-bottom: 18px; }
+.hero-tag-dot { width: 6px; height: 6px; border-radius: 50%; background: #f0b429; }
+.hero h1 { font-size: 30px; font-weight: 800; letter-spacing: -.8px; line-height: 1.35; margin-bottom: 16px; max-width: 760px; }
+.hero h1 em { color: #F0A79E; font-style: normal; }
+.hero p { font-size: 15px; color: rgba(255,255,255,.72); line-height: 1.8; max-width: 660px; margin-bottom: 10px; }
+.hero-btns { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+.hero-btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: var(--primary-lt); color: #fff; border-radius: var(--r); font-size: 13px; font-weight: 700; transition: background .15s; }
+.hero-btn-primary:hover { opacity: .88; }
+.hero-btn-outline { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.20); color: rgba(255,255,255,.88); border-radius: var(--r); font-size: 13px; font-weight: 600; transition: background .15s; }
+.hero-btn-outline:hover { background: rgba(255,255,255,.14); }
+
+.wide-section { max-width: 1160px; margin: 0 auto; padding: 52px 24px; }
+.wide-section.alt { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.wide-section.alt-inner { max-width: 1160px; margin: 0 auto; padding: 52px 24px; }
+.section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--primary); padding-bottom: 8px; border-bottom: 2px solid var(--primary); margin-bottom: 14px; display: inline-block; }
+.wide-h2 { font-size: 21px; font-weight: 800; margin-bottom: 8px; letter-spacing: -.4px; }
+.wide-sub { font-size: 13.5px; color: var(--sub); margin-bottom: 26px; line-height: 1.75; max-width: 760px; }
+
+.cap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.cap-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 20px; box-shadow: var(--shadow-1); }
+.cap-num { width: 26px; height: 26px; border-radius: 50%; background: var(--primary-bg); color: var(--primary); font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+.cap-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+.cap-desc { font-size: 12.5px; color: var(--sub); line-height: 1.7; }
+
+.flow { display: flex; flex-direction: column; gap: 0; margin-bottom: 8px; }
+.flow-item { display: flex; align-items: flex-start; gap: 16px; padding: 16px 18px; background: var(--surface); border: 1px solid var(--border); border-bottom: none; }
+.flow-item:first-child { border-radius: var(--r) var(--r) 0 0; }
+.flow-item:last-child { border-bottom: 1px solid var(--border); border-radius: 0 0 var(--r) var(--r); }
+.flow-num { width: 30px; height: 30px; border-radius: 50%; background: var(--primary); color: #fff; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.flow-body { flex: 1; }
+.flow-title-row { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; flex-wrap: wrap; }
+.flow-title { font-size: 14px; font-weight: 800; }
+.flow-desc { font-size: 12.5px; color: var(--sub); line-height: 1.65; }
+
+.badge { display: inline-flex; align-items: center; padding: 2px 9px; border-radius: 10px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+.badge-accent { background: var(--accent-bg); color: var(--accent-dk); }
+.badge-blue   { background: var(--primary-bg); color: var(--primary); }
+.badge-orange { background: var(--orange-bg); color: var(--orange); }
+.badge-green  { background: var(--green-bg); color: var(--green); }
+.badge-gray   { background: #EDEFF3; color: var(--sub); }
+
+.limit-list { display: flex; flex-direction: column; gap: 10px; }
+.limit-item { display: flex; align-items: flex-start; gap: 12px; background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--orange); border-radius: var(--r); padding: 14px 16px; box-shadow: var(--shadow-1); }
+.limit-icon { color: var(--orange); flex-shrink: 0; margin-top: 1px; }
+.limit-text { font-size: 12.5px; color: var(--text); line-height: 1.7; }
+.limit-text strong { font-weight: 700; }
+
+.svc-table-wrap { overflow-x: auto; margin-bottom: 20px; }
+.svc-table { width: 100%; border-collapse: collapse; font-size: 12.5px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+.svc-table th { padding: 10px 14px; text-align: left; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: var(--hint); border-bottom: 2px solid var(--border); background: var(--bg); }
+.svc-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--sub); }
+.svc-table tr:last-child td { border-bottom: none; }
+
+.principle-strip { background: var(--primary-bg); border: 1px solid var(--primary-bd); border-radius: var(--r); padding: 18px 20px; font-size: 12.5px; color: var(--text); line-height: 1.8; margin-bottom: 24px; }
+.principle-strip strong { color: var(--primary); }
+
+.docs-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.doc-card { display: flex; align-items: flex-start; gap: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 16px; box-shadow: var(--shadow-1); transition: border-color .15s, transform .1s; }
+.doc-card:hover { border-color: var(--primary-lt); transform: translateY(-1px); }
+.doc-icon { width: 30px; height: 30px; border-radius: 7px; background: var(--primary-bg); color: var(--primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.doc-title { font-size: 12.5px; font-weight: 700; margin-bottom: 3px; }
+.doc-desc { font-size: 11.5px; color: var(--hint); line-height: 1.55; }
+
+footer { background: var(--gov-header); color: rgba(255,255,255,.55); padding: 30px 0; }
+.footer-inner { max-width: 1160px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; font-size: 11.5px; }
+.footer-links { display: flex; gap: 16px; flex-wrap: wrap; }
+.footer-links a:hover { color: #fff; }
+
+@media (max-width: 860px) {
+  .cap-grid, .docs-grid { grid-template-columns: 1fr; }
+  .topnav-links { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="gov-bar">혼디넷(hondi.net) K-서비스 — <a href="https://hondi.net" target="_blank">hondi.net으로 돌아가기 ↗</a></div>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a href="#top" class="topnav-logo"><span class="topnav-logo-icon">👁</span>K-Watch</a>
+    <div class="topnav-links">
+      <a href="#diff">K-Police와 차이</a><a href="#flow">처리 흐름</a><a href="#limits">정직한 한계</a><a href="#docs">문서</a>
+    </div>
+    <div class="topnav-right">
+      <div class="topnav-status"><span class="status-dot"></span>hondi.net 앱 내 서비스 · 부분 가동</div>
+      <a href="https://hondi.net/desktop.html#k-services" target="_blank" class="topnav-cta">hondi.net에서 열기 ↗</a>
+    </div>
+  </div>
+</nav>
+
+<div id="top"></div>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag"><span class="hero-tag-dot"></span> 부분 가동 — 접수 서식 작성·안내까지, 자동 제출 연동은 아직</div>
+    <h1>목격한 부당함을, <em>신고로 끝내지 않습니다</em></h1>
+    <p>강도·절도 같은 범죄뿐 아니라 길가의 쓰레기, 도로 위 동물 사체, 배기가스 심한 차량, 고객 차별 등 부당·불법·편법·오염·파손으로 분류되는 모든 사건이 대상입니다.</p>
+    <p>대응 기관을 선정하고, 대응 프로세스를 개시시키고, 진행 상황을 대중에 공개합니다 — 신고자에게는 지속적으로 알림을 전달합니다.</p>
+    <div class="hero-btns">
+      <a href="https://hondi.net/desktop.html#k-services" target="_blank" class="hero-btn-primary">hondi.net에서 열기 ↗</a>
+      <a href="https://hondi.net/prompts/k-watch_v1_0.md" target="_blank" class="hero-btn-outline">정본 문서 ↗</a>
+    </div>
+  </div>
+</div>
+
+
+<section class="wide-section" id="diff">
+  <div class="section-title">K-Police와 다른 점</div>
+  <h2 class="wide-h2">제3자 목격 신고, 범위의 포괄성, 대중 공개</h2>
+  <p class="wide-sub">K-Police는 대화 중 사용자 본인의 위험 신호를 자동 감지해 신고합니다. K-Watch는 사용자가 제3자로서 목격한 사건을 다루며, 범죄를 넘어 생활 속 부당·불법·편법·오염·파손까지 다룹니다. 그리고 대응 기관 선정부터 진행 상황의 대중 공개까지 책임집니다.</p>
+  <p class="wide-sub"><a href="https://hondi.net/citizen-report.html" target="_blank" style="color:var(--primary);font-weight:600;">기존 신고 정리 기능</a>(교통법규위반·바가지요금·불법주정차·기타 4종, 정리만 하고 접수는 사용자가 안전신문고에서 직접)이 K-Watch보다 먼저 있었습니다. K-Watch는 이를 대체·흡수해 범위를 넓히고, 접수까지 대신하는 것을 목표로 합니다.</p>
+</section>
+
+<div class="wide-section alt">
+  <div class="wide-section alt-inner" style="padding:52px 24px;" id="flow">
+    <div class="section-title">처리 흐름</div>
+    <h2 class="wide-h2">신고로 끝나지 않습니다 — 대응 기관 선정부터 대중 공개까지</h2>
+    <div class="flow">
+      <div class="flow-item"><div class="flow-num">1</div><div class="flow-body"><div class="flow-title-row"><span class="flow-title">K-Intent — 신고 내용 파악(최우선)</span></div><div class="flow-desc">문자·영상·음성·소리 등을 종합해 실제로 무슨 일이 있었는지 파악하며, 추측하거나 넘겨짚지 않습니다. 상황이 불분명하면 반드시 되물어 확증합니다.</div></div></div>
+      <div class="flow-item"><div class="flow-num">2</div><div class="flow-body"><div class="flow-title-row"><span class="flow-title">K-Compose — 대응 기관 선정</span></div><div class="flow-desc">자료를 곧바로 접수하지 않고 어느 기관이 맞는지부터 판단합니다. 하나의 사건에 여러 기관이 걸쳐 있으면 병행 신고 여부도 판단합니다.</div></div></div>
+      <div class="flow-item"><div class="flow-num">3</div><div class="flow-body"><div class="flow-title-row"><span class="flow-title">K-Execute — 신고 접수 실행</span></div><div class="flow-desc">선정된 기관의 신고 창구에 증거를 첨부해 접수하고, 접수 번호를 발급받습니다.</div></div></div>
+      <div class="flow-item"><div class="flow-num">4</div><div class="flow-body"><div class="flow-title-row"><span class="flow-title">K-Deliver — 결과 정리</span></div><div class="flow-desc">접수 확인, 담당 부서 배정, 처리 진행 단계를 한눈에 볼 수 있게 정리합니다. 여러 기관 병행 신고 시 기관별로 구분합니다.</div></div></div>
+      <div class="flow-item"><div class="flow-num">5</div><div class="flow-body"><div class="flow-title-row"><span class="flow-title">K-Report — 기록 및 진행 상황 공개</span></div><div class="flow-desc">PDV에 신고 이력을 기록하고, 진행 상황을 대중에 공개하며, 신고자에게는 지속적으로 알림을 전달합니다.</div></div></div>
+    </div>
+    <div class="principle-strip">
+      <strong>반추</strong> — K-Report로 기록이 남으면 자동으로 트리거됩니다(강제). 신고 처리 결과를 대조해 분류 결함·처리 지연/미조치·외부 변수 중 어디에 해당하는지 분류하고, 숨기지 않고 요약 보고합니다.
+    </div>
+  </div>
+</div>
+
+<section class="wide-section" id="limits">
+  <div class="section-title">정직한 한계</div>
+  <h2 class="wide-h2">아직 없는 것</h2>
+  <div class="limit-list">
+    <div class="limit-item"><span class="limit-icon">⚠</span><div class="limit-text"><strong>기관 시스템 실제 자동 접수 연동</strong> — 현재는 접수 서식 작성과 안내까지만 하며, 실제 제출 시스템 연동은 기관별로 별도 확보가 필요합니다.</div></div>
+    <div class="limit-item"><span class="limit-icon">⚠</span><div class="limit-text"><strong>신고 처리 결과의 자동 확인</strong> — 기관이 공개하지 않는 진행 상황을 임의로 추정해 알려주지 않습니다.</div></div>
+    <div class="limit-item"><span class="limit-icon">⚠</span><div class="limit-text"><strong>신고 대상자 신원 확인·특정</strong> — K-Watch는 신고 접수와 진행 상황 공개를 담당하며, 신고 대상자를 특정하거나 조사하지 않습니다. 이는 전적으로 관할 기관의 소관입니다.</div></div>
+  </div>
+</section>
+
+<div class="wide-section alt">
+  <div class="wide-section alt-inner" style="padding:52px 24px;" id="docs">
+    <div class="section-title">문서</div>
+    <h2 class="wide-h2">개발자 문서</h2>
+    <div class="docs-grid">
+      <a class="doc-card" href="https://hondi.net/prompts/k-watch_v1_0.md" target="_blank"><div class="doc-icon">◆</div><div><div class="doc-title">k-watch_v1_0.md — 정본</div><div class="doc-desc">K-Watch의 모든 원칙·단계가 담긴 시스템 프롬프트 원문.</div></div></a>
+      <a class="doc-card" href="https://hondi.net/citizen-report.html" target="_blank"><div class="doc-icon">◆</div><div><div class="doc-title">기존 신고 정리 기능(citizen-report.html)</div><div class="doc-desc">K-Watch가 대체·흡수 대상으로 삼는 기존 구현.</div></div></a>
+      <a class="doc-card" href="https://hondi.net/desktop.html#k-services" target="_blank"><div class="doc-icon">◆</div><div><div class="doc-title">hondi.net K-서비스 탭</div><div class="doc-desc">다른 K-서비스도 함께 확인할 수 있습니다.</div></div></a>
+      <a class="doc-card" href="https://github.com/Openhash-Gopang/hondi" target="_blank"><div class="doc-icon">◆</div><div><div class="doc-title">GitHub — Openhash-Gopang/hondi ↗</div><div class="doc-desc">혼디넷 메인 저장소.</div></div></a>
+    </div>
+  </div>
+</div>
+
+
+<footer>
+  <div class="footer-inner">
+    <div>© 2026 혼디넷(hondi.net) · K-Watch · 팀 주피터</div>
+    <div class="footer-links">
+      <a href="https://hondi.net" target="_blank">hondi.net</a>
+      <a href="https://klaw.hondi.net" target="_blank">klaw.hondi.net</a>
+      <a href="https://plan.hondi.net" target="_blank">plan.hondi.net</a>
+      <a href="https://mail.hondi.net" target="_blank">mail.hondi.net</a>
+      <a href="https://github.com/Openhash-Gopang/hondi" target="_blank">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
